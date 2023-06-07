@@ -2,7 +2,6 @@ import tkinter as tk
 import csv
 from datetime import datetime
 
-
 def guardar_datos(evento):
     # Obtener los datos ingresados por el usuario
     nombre = entry_nombre.get()
@@ -18,23 +17,31 @@ def guardar_datos(evento):
     entry_nombre.delete(0, tk.END)
     entry_edad.delete(0, tk.END)
 
-
 def inicio_entrenamiento():
     hora_inicio = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     guardar_datos_entrenamiento("Inicio", hora_inicio)
-
 
 def final_entrenamiento():
     hora_final = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     guardar_datos_entrenamiento("Final", hora_final)
 
+def guardar_medicamento():
+    hora_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    medicamento = entry_medicamento.get()
+
+    # Guardar los datos del medicamento ingerido en un archivo CSV
+    with open('datos_medicamentos.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([medicamento, hora_actual])
+
+    # Limpiar el campo de entrada
+    entry_medicamento.delete(0, tk.END)
 
 def guardar_datos_entrenamiento(etapa, hora):
     # Guardar los datos de entrenamiento en un archivo CSV
     with open('datos_entrenamiento.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([etapa, hora])
-
 
 if __name__ == "__main__":
     # Crear la ventana principal
@@ -63,6 +70,16 @@ if __name__ == "__main__":
     # Crear el botón para finalizar el entrenamiento
     boton_final = tk.Button(ventana, text="Final Entrenamiento", command=final_entrenamiento)
     boton_final.pack()
+
+    # Crear etiquetas y campos de entrada para el medicamento ingerido
+    label_medicamento = tk.Label(ventana, text="Medicamento ingerido:")
+    label_medicamento.pack()
+    entry_medicamento = tk.Entry(ventana)
+    entry_medicamento.pack()
+
+    # Crear el botón para guardar el medicamento ingerido
+    boton_medicamento = tk.Button(ventana, text="Medicamento Ingerido", command=guardar_medicamento)
+    boton_medicamento.pack()
 
     # Ejecutar la ventana principal
     ventana.mainloop()
